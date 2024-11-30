@@ -5,6 +5,7 @@ edition = "2021"
 authors = ["Ahraman <ahraman.programming@gmail.com>"]
 
 [dependencies]
+thiserror = "2.0.3"
 dotenvy = "0.15.7"
 handlebars = "6.2.0"
 serde = { version = "1.0.215", features = ["derive"] }
