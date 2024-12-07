@@ -12,7 +12,7 @@ use crate::{
     error::Error,
 };
 
-#[derive(Default, Deserialize)]
+#[derive(Default, Clone, Copy, Deserialize)]
 pub enum Action {
     #[serde(rename = "view")]
     #[default]

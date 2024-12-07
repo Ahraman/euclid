@@ -16,6 +16,9 @@ pub enum Error {
     HandlebarsRender(#[from] handlebars::RenderError),
 
     #[error(transparent)]
+    AxumHttp(#[from] axum::http::Error),
+
+    #[error(transparent)]
     Sqlx(#[from] sqlx::Error),
 }
 

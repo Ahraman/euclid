@@ -1,6 +1,6 @@
 use axum::{routing::get, Router};
 use handlebars::Handlebars;
-use routing::{page, root};
+use routing::{asset, page, root};
 use sqlx::PgPool;
 use tokio::fs;
 
@@ -51,6 +51,7 @@ impl App {
             .route("/", get(root::get))
             .route("/w/", get(page::get))
             .route("/w/:title", get(page::get))
+            .route("/asset", get(asset::get))
             .with_state(self)
     }
 }
