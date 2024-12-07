@@ -1,10 +1,7 @@
-use std::path::Path;
-
-use axum::{extract::Query, response::Response};
+use axum::{extract::Query, response::IntoResponse};
 use serde::Deserialize;
-use tokio::fs;
 
-use crate::error::Error;
+use crate::{app::controller::load_asset, error::Error};
 
 #[derive(Default, Clone, Copy, Deserialize)]
 pub enum AssetKind {
@@ -15,7 +12,7 @@ pub enum AssetKind {
 }
 
 impl AssetKind {
-    fn content_type(&self) -> &'static str {
+    pub fn content_type(&self) -> &'static str {
         match self {
             AssetKind::Unknown => "application/octet-stream",
             AssetKind::Css => "text/css",
@@ -30,29 +27,6 @@ pub struct AssetInfo {
     pub kind: AssetKind,
 }
 
-pub async fn get(Query(query): Query<AssetInfo>) -> Result<Response, Error> {
-    let kind = if let AssetKind::Unknown = query.kind {
-        if let Some(extension) = Path::new(&query.path)
-            .extension()
-            .map(|s| s.to_str())
-            .flatten()
-        {
-            match extension {
-                "css" => AssetKind::Css,
-                _ => AssetKind::Unknown,
-            }
-        } else {
-            AssetKind::Unknown
-        }
-    } else {
-        query.kind
-    };
-
-    Ok(Response::builder()
-        .header("Content-Type", kind.content_type())
-        .body(
-            fs::read_to_string(format!("assets/{}", &query.path))
-                .await?
-                .into(),
-        )?)
+pub async fn get(Query(query): Query<AssetInfo>) -> Result<impl IntoResponse, Error> {
+    load_asset::run(query.path, query.kind).await
 }
