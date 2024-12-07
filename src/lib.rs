@@ -1,2 +1,3 @@
-mod error;
-pub use error::Error;
+pub mod app;
+pub mod error;
+pub mod query;

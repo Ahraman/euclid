@@ -1,3 +1,5 @@
+use axum::response::{IntoResponse, Response};
+
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error(transparent)]
@@ -7,4 +9,18 @@ pub enum Error {
 
     #[error(transparent)]
     Dotenvy(#[from] dotenvy::Error),
+
+    #[error(transparent)]
+    HandlebarsTemplate(#[from] handlebars::TemplateError),
+    #[error(transparent)]
+    HandlebarsRender(#[from] handlebars::RenderError),
+
+    #[error(transparent)]
+    Sqlx(#[from] sqlx::Error),
+}
+
+impl IntoResponse for Error {
+    fn into_response(self) -> Response {
+        format!("{self}").into_response()
+    }
 }
