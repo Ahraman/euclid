@@ -15,17 +15,15 @@ impl Page {
     ) -> Result<Self, Error> {
         Ok(query_as!(
             Page,
-            r#"
-                WITH page (page_id, rev_id) AS (
-                        INSERT INTO pages (page_title, page_rev)
+            r#"WITH page (page_id, rev_id) AS (
+                    INSERT INTO pages (page_title, page_rev)
                             VALUES ($1, nextval('revisions_rev_id_seq'))
                             RETURNING page_id, page_rev
-                    )
-                    INSERT INTO revisions (rev_id, rev_content, rev_page)
-                        SELECT rev_id, $2, page_id
-                            FROM page
-                        RETURNING rev_page AS id, rev_page AS rev_id
-                    "#,
+                )
+                INSERT INTO revisions (rev_id, rev_content, rev_page)
+                    SELECT rev_id, $2, page_id
+                        FROM page
+                    RETURNING rev_page AS id, rev_page AS rev_id"#,
             &title,
             content.id
         )
@@ -51,11 +49,9 @@ impl Page {
         conn: impl PgExecutor<'_>,
     ) -> Result<(), Error> {
         query!(
-            r#"
-            UPDATE pages
+            r#"UPDATE pages
                 SET page_rev = $2
-                WHERE page_id = $1
-            "#,
+                WHERE page_id = $1"#,
             self.id,
             revision.id,
         )
@@ -83,11 +79,9 @@ impl Revision {
     ) -> Result<Self, Error> {
         Ok(query_as!(
             Revision,
-            r#"
-                    INSERT INTO revisions (rev_parent, rev_content, rev_page)
-                        VALUES ($2, $3, $1)
-                        RETURNING rev_id AS id, rev_content AS content_id
-                    "#,
+            r#"INSERT INTO revisions (rev_parent, rev_content, rev_page)
+                VALUES ($2, $3, $1)
+                RETURNING rev_id AS id, rev_content AS content_id"#,
             page.id,
             page.rev_id,
             content.id,
