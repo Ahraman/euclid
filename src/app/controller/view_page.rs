@@ -1,14 +1,14 @@
-use axum::response::Html;
+use axum::response::{Html, IntoResponse, Response};
 use serde_json::json;
 
 use crate::{app::App, error::Error, query::page::Page};
 
-pub async fn run(title: String, app: App) -> Result<Html<String>, Error> {
-    if let Some(response) = view_page(&title, &app).await? {
-        Ok(response)
+pub async fn run(title: String, app: App) -> Result<Response, Error> {
+    Ok(if let Some(html) = view_page(&title, &app).await? {
+        html.into_response()
     } else {
-        page_not_found(&title, &app).await
-    }
+        page_not_found(&title, &app).await?.into_response()
+    })
 }
 
 async fn view_page(title: &str, app: &App) -> Result<Option<Html<String>>, Error> {

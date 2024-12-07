@@ -1,6 +1,8 @@
 {{#*inline "pageContent"}}
-<form>
-    <textarea>{{page.content}}</textarea>
+<form id="page-edit" action="?action=submit" method="post">
+    <textarea id="page-text-area" name="content" rows="50">{{page.content}}</textarea>
+    <br /><br />
+    <input id="page-edit-submit" type="submit" />
 </form>
 {{/inline}}
 

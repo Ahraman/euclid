@@ -1,0 +1,28 @@
+ul.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.navbar > li {
+    padding: 0.3em;
+    float: left;
+}
+
+#page-header {
+    display: flex;
+}
+
+#page-header-left {
+    display: flex;
+    flex-grow: 1;
+}
+
+#page-header-right {
+    display: flex;
+}
+
+#page-text-area {
+    margin: 0 2%;
+    width: 90%;
+}

@@ -1,10 +1,10 @@
-use axum::response::Html;
+use axum::response::{Html, IntoResponse, Response};
 use serde_json::json;
 
 use crate::{app::App, error::Error, query::page::Page};
 
-pub async fn run(title: String, app: App) -> Result<Html<String>, Error> {
-    edit_page(&title, &app).await
+pub async fn run(title: String, app: App) -> Result<Response, Error> {
+    Ok(edit_page(&title, &app).await?.into_response())
 }
 
 async fn edit_page(title: &str, app: &App) -> Result<Html<String>, Error> {

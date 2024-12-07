@@ -50,7 +50,7 @@ impl App {
         Router::new()
             .route("/", get(root::get))
             .route("/w/", get(page::get))
-            .route("/w/:title", get(page::get))
+            .route("/w/:title", get(page::get).post(page::post))
             .route("/asset", get(asset::get))
             .with_state(self)
     }

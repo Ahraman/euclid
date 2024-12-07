@@ -6,10 +6,19 @@
     <link rel="stylesheet" href="/asset?path=css/main.css&type=css" />
 </head>
 <body>
-    <div class="container">
-        <div class="page">
-            <div class="page-header">
-                <h1 class="page-title">{{page.title}}</h1>
+    <div id="container">
+        <div id="page">
+            <div id="page-header">
+                <div id="page-header-left">
+                    <h1 id="page-title">{{page.title}}</h1>
+                </div>
+                <div id="page-header-right">
+                    <ul class="navbar">
+                        <li><a href="/w/{{page.title}}">View</a></li>
+                        <li><a href="/w/{{page.title}}?action=edit">Edit</a></li>
+                        <li><a>History</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="page-content">
                 {{> pageContent }}
