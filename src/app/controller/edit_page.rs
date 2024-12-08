@@ -25,7 +25,7 @@ async fn edit_page(title: &str, app: &App) -> Result<Html<String>, Error> {
             &json!({
                 "page": {
                     "title": title,
-                    "content": content,
+                    "content": &content,
                 }
             }),
         )?

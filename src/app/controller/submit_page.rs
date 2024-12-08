@@ -18,7 +18,6 @@ async fn submit_page(title: &str, content: String, app: &App) -> Result<impl Int
         let revision = Revision::create(&page, &content, &mut *tx).await?;
         page.update_revision(&revision, &mut *tx).await?;
         tx.commit().await?;
-        println!("Hello");
     } else {
         let _ = Page::create(title, &content, &app.conn).await?;
     };

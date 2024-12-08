@@ -131,7 +131,7 @@ impl Content {
             r#"INSERT INTO contents (content_text)
                     VALUES ($1)
                     RETURNING content_id AS id, content_text AS text"#,
-            &content
+            &content,
         )
         .fetch_one(conn)
         .await?)
