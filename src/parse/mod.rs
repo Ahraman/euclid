@@ -1,3 +1,5 @@
+use std::str::Chars;
+
 use crate::error::Error;
 
 pub struct Parser {}
@@ -12,6 +14,7 @@ impl Parser {
     }
 }
 
+#[derive(Debug)]
 pub enum Node {
     Empty,
     LineBreak,
@@ -38,7 +41,9 @@ impl Node {
                     second_line_break = true;
                 } else {
                     first_line_break = true;
-                    nodes.push(Node::Paragraph(Box::new(Node::parse_paragraph(&buf)?)));
+                    nodes.push(Node::Paragraph(Box::new(Node::parse_paragraph(
+                        &mut buf.chars(),
+                    )?)));
                     buf.clear();
                 }
             } else {
@@ -49,7 +54,9 @@ impl Node {
         }
 
         if !buf.is_empty() {
-            nodes.push(Node::Paragraph(Box::new(Node::parse_paragraph(&buf)?)));
+            nodes.push(Node::Paragraph(Box::new(Node::parse_paragraph(
+                &mut buf.chars(),
+            )?)));
         }
 
         Ok(match nodes.len() {
@@ -59,9 +66,27 @@ impl Node {
         })
     }
 
-    fn parse_paragraph(text: &str) -> Result<Node, Error> {
-        Ok(Node::Text(text.to_string()))
+    fn parse_paragraph(text: &mut Chars<'_>) -> Result<Node, Error> {
+        /*let mut nodes = Vec::new();
+
+        let start = 0;
+        let mut cur = 0;
+
+        while let Some(ch) = text.next() {
+            if ch == '[' {
+                nodes.push(Node::Text(text.take(cur).collect()));
+                let node =
+            } else {
+                cur += 1;
+            }
+        }*/
+
+        Ok(Node::Text(text.collect()))
     }
+
+    /*    fn parse_link(text: &mut Chars<'_>) -> Result<Node, Error> {
+
+    }*/
 }
 
 impl ToString for Node {
