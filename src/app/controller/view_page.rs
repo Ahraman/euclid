@@ -1,7 +1,7 @@
 use axum::response::{Html, IntoResponse, Response};
 use serde_json::json;
 
-use crate::{app::App, error::Error, query::page::Page};
+use crate::{app::App, error::Error, parse::Parser, query::page::Page};
 
 pub async fn run(title: String, app: App) -> Result<Response, Error> {
     Ok(if let Some(html) = view_page(&title, &app).await? {
@@ -13,12 +13,14 @@ pub async fn run(title: String, app: App) -> Result<Response, Error> {
 
 async fn view_page(title: &str, app: &App) -> Result<Option<Html<String>>, Error> {
     Ok(if let Some(page) = Page::find(title, &app.conn).await? {
-        let content = page
+        let raw = page
             .revision(&app.conn)
             .await?
             .content(&app.conn)
             .await?
             .text;
+
+        let content = Parser::new().parse(raw)?;
 
         Some(
             app.handlebars
